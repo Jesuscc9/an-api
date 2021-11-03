@@ -7,15 +7,15 @@ exports.create = (req, res) => {
   if (!req.body) {
     res.status(400).send({
       message: "Content can not be empty!"
-    }); 
+    });
   }
 
-   const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
   }
 
- // Create a Patient
+  // Create a Patient
   const patient = new Patient({
     name: req.body.name,
     image: req.body.image,
@@ -64,20 +64,14 @@ exports.findOne = (req, res) => {
   });
 };
 
-exports.imageExist = (image, res) => {
-  Patient.findByImage(image, (err, data) => {
-    if (err) {
-      if (err.type === "not_found") {
-        res.status(404).send({
-          message: `Not found Patient with image ${req.params.image}.`
-        });
-      } else {
-        res.status(500).send({
-          message: "Error retrieving Patient with image " + req.params.image
-        });
-      }
-    } else res.send(data);
-  });
+exports.imageExists = async (image, res) => {
+  try {
+    const xd = await Patient.findByImage(image);
+    if(xd !== "not_found") return true;
+    return false;
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 exports.update = (req, res) => {
@@ -88,11 +82,11 @@ exports.update = (req, res) => {
     });
   }
 
-   const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
   }
-  
+
   Patient.updateById(
     req.params.patientId,
     new Patient(req.body),

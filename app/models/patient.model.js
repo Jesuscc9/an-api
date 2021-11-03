@@ -1,7 +1,7 @@
 const sql = require("./db.js");
 
 // constructor
-const Patient = function(patient) {
+const Patient = function (patient) {
   this.name = patient.name;
   this.image = patient.image;
   this.diagnosis = patient.diagnosis;
@@ -44,21 +44,22 @@ Patient.findById = (patientId, result) => {
 };
 
 Patient.findByImage = (image, result) => {
-  sql.query(`SELECT * FROM patients WHERE image = '${image}'`, (err, res) => {
-    if (err) {
-      console.log("error: ", err);
-      result(err, null);
-      return;
-    }
-
-    if (res.length) {
-      console.log("found Patient: ", res[0]);
-      result(null, res[0]);
-      return;
-    }
-    // not found Patient with the id
-    result({ type: "not_found" }, null);
-  });
+  return new Promise((resolve, reject) => {
+    sql.query(`SELECT * FROM patients WHERE image = '${image}'`, (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        reject(err)
+        return;
+      }
+      if (res.length) {
+        console.log("found Patient: ", res[0]);
+        resolve(res[0])
+        return;
+      }
+      // not found Patient with the id
+      resolve("not_found");
+    });
+  })
 };
 
 Patient.getAll = result => {
@@ -75,7 +76,7 @@ Patient.getAll = result => {
 };
 
 Patient.updateById = (id, patient, result) => {
-	//created_at and registered_by will not be updated
+  //created_at and registered_by will not be updated
   patient.updated_at = new Date();
 
   sql.query(
