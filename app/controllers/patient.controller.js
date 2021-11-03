@@ -10,26 +10,28 @@ exports.create = (req, res) => {
     }); 
   }
 
-  const errors = validationResult(req);
+   const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
   }
 
-  // Create a Customer
-  const customer = new Patient({
+ // Create a Patient
+  const patient = new Patient({
     name: req.body.name,
     image: req.body.image,
     diagnosis: req.body.diagnosis,
     registered_by: req.body.registered_by,
+    updated_by: req.body.updated_by,
     created_at: req.body.created_at,
+    updated_at: req.body.updated_at,
   });
 
-  // Save Customer in the database
-  Patient.create(customer, (err, data) => {
+  // Save Patient in the database
+  Patient.create(patient, (err, data) => {
     if (err)
       res.status(500).send({
         message:
-          err.message || "Some error occurred while creating the Customer."
+          err.message || "Some error occurred while creating the Patient."
       });
     else res.send(data);
   });
@@ -49,7 +51,7 @@ exports.findAll = (req, res) => {
 exports.findOne = (req, res) => {
   Patient.findById(req.params.patientId, (err, data) => {
     if (err) {
-      if (err.kind === "not_found") {
+      if (err.type === "not_found") {
         res.status(404).send({
           message: `Not found Patient with id ${req.params.Patient}.`
         });
@@ -70,12 +72,17 @@ exports.update = (req, res) => {
     });
   }
 
+   const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+  }
+  
   Patient.updateById(
-    req.params.Patient,
+    req.params.patientId,
     new Patient(req.body),
     (err, data) => {
       if (err) {
-        if (err.kind === "not_found") {
+        if (err.type === "not_found") {
           res.status(404).send({
             message: `Not found Patient with id ${req.params.patientId}.`
           });
@@ -92,7 +99,7 @@ exports.update = (req, res) => {
 exports.delete = (req, res) => {
   Patient.remove(req.params.patientId, (err, data) => {
     if (err) {
-      if (err.kind === "not_found") {
+      if (err.type === "not_found") {
         res.status(404).send({
           message: `Not found Patient with id ${req.params.patientId}.`
         });
@@ -101,7 +108,7 @@ exports.delete = (req, res) => {
           message: "Could not delete Patient with id " + req.params.patientId
         });
       }
-    } else res.send({ message: `Customer was deleted successfully!` });
+    } else res.send({ message: `Patient was deleted successfully!` });
   });
 };
 

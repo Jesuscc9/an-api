@@ -6,10 +6,12 @@ const Patient = function(patient) {
   this.image = patient.image;
   this.diagnosis = patient.diagnosis;
   this.registered_by = patient.registered_by;
-  this.created_at = new Date();
+  this.updated_by = patient.updated_by;
 };
 
 Patient.create = (newPatient, result) => {
+  newPatient.created_at = new Date();
+
   sql.query("INSERT INTO patients SET ?", newPatient, (err, res) => {
     if (err) {
       console.log("error: ", err);
@@ -31,13 +33,13 @@ Patient.findById = (patientId, result) => {
     }
 
     if (res.length) {
-      console.log("found customer: ", res[0]);
+      console.log("found Patient: ", res[0]);
       result(null, res[0]);
       return;
     }
 
-    // not found Customer with the id
-    result({ kind: "not_found" }, null);
+    // not found Patient with the id
+    result({ type: "not_found" }, null);
   });
 };
 
@@ -56,10 +58,11 @@ Patient.getAll = result => {
 
 Patient.updateById = (id, patient, result) => {
 	//created_at and registered_by will not be updated
-	
+  patient.updated_at = new Date();
+
   sql.query(
-    "UPDATE patients SET name = ?, image = ?, diagnosis = ?, updated_at = ? WHERE id = ?",
-    [patient.name, patient.iamge, patient.diagnosis, new Date(), id],
+    "UPDATE patients SET name = ?, image = ?, diagnosis = ?, updated_by = ?, updated_at = ? WHERE id = ?",
+    [patient.name, patient.image, patient.diagnosis, patient.updated_by, new Date(), id],
     (err, res) => {
       if (err) {
         console.log("error: ", err);
@@ -68,12 +71,12 @@ Patient.updateById = (id, patient, result) => {
       }
 
       if (res.affectedRows == 0) {
-        // not found Customer with the id
-        result({ kind: "not_found" }, null);
+        // not found Patient with the id
+        result({ type: "not_found" }, null);
         return;
       }
 
-      console.log("updated customer: ", { id: id, ...patient });
+      console.log("updated Patient: ", { id: id, ...patient });
       result(null, { id: id, ...patient });
     }
   );
@@ -88,12 +91,12 @@ Patient.remove = (id, result) => {
     }
 
     if (res.affectedRows == 0) {
-      // not found Customer with the id
-      result({ kind: "not_found" }, null);
+      // not found Patient with the id
+      result({ type: "not_found" }, null);
       return;
     }
 
-    console.log("deleted customer with id: ", id);
+    console.log("deleted Patient with id: ", id);
     result(null, res);
   });
 };
