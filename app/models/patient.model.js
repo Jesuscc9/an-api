@@ -43,6 +43,24 @@ Patient.findById = (patientId, result) => {
   });
 };
 
+Patient.findByImage = (image, result) => {
+  sql.query(`SELECT * FROM patients WHERE image = '${image}'`, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+
+    if (res.length) {
+      console.log("found Patient: ", res[0]);
+      result(null, res[0]);
+      return;
+    }
+    // not found Patient with the id
+    result({ type: "not_found" }, null);
+  });
+};
+
 Patient.getAll = result => {
   sql.query("SELECT * FROM patients", (err, res) => {
     if (err) {

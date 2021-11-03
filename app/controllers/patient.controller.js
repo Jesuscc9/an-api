@@ -64,6 +64,22 @@ exports.findOne = (req, res) => {
   });
 };
 
+exports.imageExist = (image, res) => {
+  Patient.findByImage(image, (err, data) => {
+    if (err) {
+      if (err.type === "not_found") {
+        res.status(404).send({
+          message: `Not found Patient with image ${req.params.image}.`
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving Patient with image " + req.params.image
+        });
+      }
+    } else res.send(data);
+  });
+}
+
 exports.update = (req, res) => {
   // Validate Request
   if (!req.body) {
