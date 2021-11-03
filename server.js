@@ -9,9 +9,11 @@ app.use(bodyParser.json());
 // parse requests of content-type: application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
 
+require("./app/routes/patient.routes.js")(app);
+
 // simple route
 app.get("/", (req, res) => {
-  res.json({ message: "An Camera api endpoint" });
+  res.json({ message: "An Camera API endpoint" });
 });
 
 // set port, listen for requests
