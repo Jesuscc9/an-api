@@ -1,12 +1,20 @@
-const http = require('http');
+const express = require("express");
+const bodyParser = require("body-parser");
 
-const app = http.createServer((request, response) => {
-  response.writeHead(200, { 'Content-Type': 'text/plain' });
-  response.end('Hola gente');
-})
+const app = express();
 
-const PORT = 3001;
+// parse requests of content-type: application/json
+app.use(bodyParser.json());
 
-app.listen(PORT);
+// parse requests of content-type: application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: true }));
 
-console.log(`Server running on port ${PORT}`);
+// simple route
+app.get("/", (req, res) => {
+  res.json({ message: "An Camera api endpoint" });
+});
+
+// set port, listen for requests
+app.listen(3001, () => {
+  console.log("Server is running on port 3001.");
+});
