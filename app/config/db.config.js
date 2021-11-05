@@ -1,6 +1,9 @@
+const dotenv = require('dotenv');
+dotenv.config();
+
 module.exports = {
   HOST: "localhost",
-  USER: "root",
-  PASSWORD: "",
+  USER: `${process.env.DB_USER}`,
+  PASSWORD: `${process.env.DB_PASSWORD}`,
   DB: "an_camera"
 };

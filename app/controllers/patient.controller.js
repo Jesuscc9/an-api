@@ -20,10 +20,9 @@ exports.create = (req, res) => {
     name: req.body.name,
     image: req.body.image,
     diagnosis: req.body.diagnosis,
+    image_status: req.body.image_status,
     registered_by: req.body.registered_by,
     updated_by: req.body.updated_by,
-    created_at: req.body.created_at,
-    updated_at: req.body.updated_at,
   });
 
   // Save Patient in the database
@@ -66,8 +65,8 @@ exports.findOne = (req, res) => {
 
 exports.imageExists = async (image, res) => {
   try {
-    const xd = await Patient.findByImage(image);
-    if(xd !== "not_found") return true;
+    const imageRes = await Patient.findByImage(image);
+    if(imageRes !== "not_found") return true;
     return false;
   } catch (error) {
     console.log(error)

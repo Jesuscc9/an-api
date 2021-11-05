@@ -1,3 +1,5 @@
+-- mysql --user="root" --database="an_camera" --password="password" < "./app/config/db.schema.sql"
+
 -- phpMyAdmin SQL Dump
 -- version 5.0.2
 -- https://www.phpmyadmin.net/
@@ -33,7 +35,7 @@ CREATE TABLE IF NOT EXISTS `patients` (
   `name` varchar(100) NOT NULL,
   `image` varchar(100) NOT NULL,
   `diagnosis` varchar(100) NOT NULL,
-  `image_status` varchar(100) NOT NULL DEFAULT 'declined',
+  `image_status` varchar(100) DEFAULT 'declined',
   `registered_by` varchar(100) NOT NULL,
   `updated_by` varchar(100) DEFAULT NULL,
   `created_at` varchar(100) NOT NULL,

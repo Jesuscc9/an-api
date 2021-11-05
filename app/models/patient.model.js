@@ -5,6 +5,7 @@ const Patient = function (patient) {
   this.name = patient.name;
   this.image = patient.image;
   this.diagnosis = patient.diagnosis;
+  this.image_status = patient.image_status || "declined";
   this.registered_by = patient.registered_by;
   this.updated_by = patient.updated_by;
 };
@@ -80,8 +81,8 @@ Patient.updateById = (id, patient, result) => {
   patient.updated_at = new Date();
 
   sql.query(
-    "UPDATE patients SET name = ?, image = ?, diagnosis = ?, updated_by = ?, updated_at = ? WHERE id = ?",
-    [patient.name, patient.image, patient.diagnosis, patient.updated_by, new Date(), id],
+    "UPDATE patients SET name = ?, image = ?, diagnosis = ?, image_status = ? , updated_by = ?, updated_at = ? WHERE id = ?",
+    [patient.name, patient.image, patient.diagnosis, patient.image_status, patient.updated_by, new Date(), id],
     (err, res) => {
       if (err) {
         console.log("error: ", err);

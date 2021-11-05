@@ -13,6 +13,7 @@ module.exports = app => {
       if(imageExists) return Promise.reject("Image already exists")
       return Promise.resolve()
     }).isLength({min: 2, max: 24}),
+    body('image_status', "The image_status can only be 'approved' or 'declined'").isIn(["approved", "declined"]),
     body('diagnosis', "The diagnosis can only be 'negative', 'positive' or 'uncertain'").isIn(["positive", "negative", "uncertain"]),
     body('registered_by', "The registered_by is too short or large").isLength({ min: 2, max: 24 }),
     body('updated_by', 'updated_by is not valid in a post request.').not().exists(),
@@ -26,9 +27,8 @@ module.exports = app => {
 
   // Update a Patient with patientId
   app.put("/patients/:patientId",
-    body('name', 'The name is too short or large').isLength({ min: 2, max: 24 }).trim(),
-    body('image', 'The image name is too short or large').isLength({ min: 2, max: 24 }),
     body('diagnosis', "The diagnosis can only be 'negative', 'positive' or 'uncertain'").isIn(["positive", "negative", "uncertain"]),
+    body('image_status', "The image_status can only be 'approved' or 'declined'").isIn(["approved", "declined"]),
     body('updated_by', "The updated_by is too short or large").isLength({ min: 2, max: 24 }),
     body('registered_by', 'registered_by is not valid in a put request.').not().exists(),
     patients.update);
