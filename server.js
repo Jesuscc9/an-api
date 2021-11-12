@@ -10,6 +10,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 require("./app/routes/patient.routes.js")(app);
+require("./app/routes/auth.routes.js")(app);
 
 // simple route
 app.get("/", (req, res) => {
