@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1:3306
--- Tiempo de generación: 13-11-2021 a las 19:45:32
+-- Tiempo de generación: 13-11-2021 a las 21:55:46
 -- Versión del servidor: 5.7.31
 -- Versión de PHP: 7.3.21
 
@@ -29,14 +29,14 @@ SET time_zone = "+00:00";
 
 DROP TABLE IF EXISTS `diagnoses`;
 CREATE TABLE IF NOT EXISTS `diagnoses` (
-  `diagnosis_id` int(100) NOT NULL AUTO_INCREMENT,
+  `id` int(100) NOT NULL AUTO_INCREMENT,
   `patient_id` int(100) NOT NULL,
   `diagnosis` varchar(100) NOT NULL,
   `type` varchar(100) NOT NULL,
   `diagnosed_by` int(11) NOT NULL,
   `created_at` varchar(100) NOT NULL,
   `updated_at` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`diagnosis_id`),
+  PRIMARY KEY (`id`),
   KEY `patient_id` (`patient_id`),
   KEY `diagnosed_by` (`diagnosed_by`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS `diagnoses` (
 
 DROP TABLE IF EXISTS `images`;
 CREATE TABLE IF NOT EXISTS `images` (
-  `image_id` int(100) NOT NULL AUTO_INCREMENT,
+  `id` int(100) NOT NULL AUTO_INCREMENT,
   `image_name` varchar(100) NOT NULL,
   `size` varchar(100) NOT NULL,
   `resolution` varchar(100) NOT NULL,
@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS `images` (
   `patient_id` int(100) NOT NULL,
   `created_at` varchar(100) NOT NULL,
   `updated_at` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`image_id`),
+  PRIMARY KEY (`id`),
   KEY `patientId` (`patient_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -70,14 +70,14 @@ CREATE TABLE IF NOT EXISTS `images` (
 
 DROP TABLE IF EXISTS `patients`;
 CREATE TABLE IF NOT EXISTS `patients` (
-  `patient_id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `patient_name` varchar(100) NOT NULL,
   `image_id` int(100) NOT NULL,
   `registered_by` varchar(100) NOT NULL,
   `updated_by` varchar(100) DEFAULT NULL,
   `created_at` varchar(100) NOT NULL,
   `updated_at` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`patient_id`),
+  PRIMARY KEY (`id`),
   KEY `imageId` (`image_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -89,20 +89,20 @@ CREATE TABLE IF NOT EXISTS `patients` (
 
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users` (
-  `user_id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(100) NOT NULL,
   `password` varchar(100) NOT NULL,
-  `user_image` varchar(100) DEFAULT NULL,
+  `image` varchar(100) DEFAULT NULL,
   `created_at` varchar(100) NOT NULL,
   `updated_at` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`user_id`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `users`
 --
 
-INSERT INTO `users` (`user_id`, `username`, `password`, `user_image`, `created_at`, `updated_at`) VALUES
+INSERT INTO `users` (`id`, `username`, `password`, `image`, `created_at`, `updated_at`) VALUES
 (1, 'hola', '$2b$10$Ygw66On70UFSqiOnJXrlcegEMdX9EvRUsjXTXWxauijVD8wlEkYSG', NULL, '2021-11-13 12:50:02.357', NULL),
 (2, 'holas', '$2b$10$LCsCOGurGA90432Neg0edelBfMglQA3TG9D9Gw5KG3qjINLeNwf4q', NULL, '2021-11-13 13:42:20.318', NULL);
 
@@ -114,14 +114,14 @@ INSERT INTO `users` (`user_id`, `username`, `password`, `user_image`, `created_a
 -- Filtros para la tabla `diagnoses`
 --
 ALTER TABLE `diagnoses`
-  ADD CONSTRAINT `diagnoses_ibfk_1` FOREIGN KEY (`patient_id`) REFERENCES `patients` (`patient_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `diagnoses_ibfk_1` FOREIGN KEY (`patient_id`) REFERENCES `patients` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `images`
 --
 ALTER TABLE `images`
-  ADD CONSTRAINT `images_ibfk_1` FOREIGN KEY (`patient_id`) REFERENCES `patients` (`patient_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `images_ibfk_2` FOREIGN KEY (`image_id`) REFERENCES `patients` (`image_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `images_ibfk_1` FOREIGN KEY (`patient_id`) REFERENCES `patients` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `images_ibfk_2` FOREIGN KEY (`id`) REFERENCES `patients` (`image_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
