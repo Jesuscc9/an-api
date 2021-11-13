@@ -2,7 +2,7 @@ const sql = require("./db.js");
 
 // constructor
 const User = function (user) {
-  this.user = user.user;
+  this.username = user.username;
   this.password = user.password;
 };
 
@@ -21,8 +21,8 @@ User.create = (newUser, result) => {
   });
 };
 
-Patient.findById = (patientId, result) => {
-  sql.query(`SELECT * FROM patients WHERE id = ${patientId}`, (err, res) => {
+User.findByUsername = (username, result) => {
+  sql.query(`SELECT * FROM users WHERE username = '${username}'`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
@@ -40,4 +40,4 @@ Patient.findById = (patientId, result) => {
   });
 };
 
-module.exports = Patient;
+module.exports = User;
