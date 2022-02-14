@@ -1,16 +1,19 @@
-const { body } = require("express-validator");
+const { signginValidator, signupValidator } = require("../middlewares/validators/auth")
+const { authenticateToken } = require("../middlewares/validators/token");
 
 module.exports = app => {
 
 	const auth = require("../controllers/auth.controller.js");
 
-	app.post("/signup",
-		body('username', 'The username is too short or large').isLength({ min: 2, max: 24 }).trim(),
-		body('password', 'The password is too short or large').isLength({ min: 2, max: 24 }).trim(),
-		auth.signUp);
+	app.post("/signin", signginValidator, auth.signIn);
 
-	app.post("/signin",
-		body('username', 'The username is too short or large').isLength({ min: 2, max: 24 }).trim(),
-		body('password', 'The password is too short or large').isLength({ min: 2, max: 24 }).trim(),
-		auth.signIn);
+	app.post("/signup", signupValidator, auth.signUp);
+
+	app.get("/me", authenticateToken, (req, res) => {
+		res.status(200).send({
+			message: "ola"
+		})
+	});
+
+	app.post("/token", auth.refreshToken)
 };

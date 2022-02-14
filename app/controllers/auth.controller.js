@@ -1,30 +1,19 @@
 const User = require("../models/user.model.js");
-const { validationResult } = require("express-validator");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken")
 
 exports.signUp = async (req, res) => {
   // Validate request
-
-  if (!req.body) {
-    res.status(400).send({
-      message: "Content can not be empty!"
-    });
-  }
-
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
 
   const salt = await bcrypt.genSalt(10);
 
   req.body.password = await bcrypt.hash(req.body.password, salt);
 
-
   // Create a User 
   const user = new User({
     username: req.body.username,
     password: req.body.password,
+    role: req.body.role,
   });
 
   // Check if user already exists
@@ -45,8 +34,8 @@ exports.signUp = async (req, res) => {
         });
 
       } else {
-        res.status(500).send({
-          message: "Error retrieving user with username " + req.body.username
+        res.status(404).send({
+          message: "User not found " + req.body.username
         });
       }
     } else {
@@ -54,8 +43,9 @@ exports.signUp = async (req, res) => {
     }
   });
 
-
 };
+
+let refreshTokens = [];
 
 exports.signIn = (req, res) => {
   User.findByUsername(req.body.username, async (err, data) => {
@@ -73,9 +63,20 @@ exports.signIn = (req, res) => {
       const validPassword = await bcrypt.compare(req.body.password, data.password);
 
       if (validPassword) {
+
+        const username = req.body.username;
+        const user = { name: username }
+
+        const accessToken = generateAccessToken(user);
+        // refreshTokens.push(refreshToken);
+        // const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET);
+
         res.send({
-          message: 'sucess'
+          message: 'sucess',
+          accessToken,
+          // refreshToken
         });
+
       } else {
         res.status(404).send({
           message: 'Invalid credentials'
@@ -84,3 +85,22 @@ exports.signIn = (req, res) => {
     }
   });
 };
+
+//TODO implement refresh tokens xd
+exports.refreshToken = (req, res) => {
+  const refreshToken = req.body.token;
+  if (refreshToken == null) return res.status(401).send({
+    message: "No token provided"
+  })
+  if (!refreshTokens.includes(refreshToken)) return res.status(403).send({
+    message: "Invalid token"
+  })
+
+  jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
+
+  })
+}
+
+const generateAccessToken = (user) => {
+  return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '2h' });
+}
